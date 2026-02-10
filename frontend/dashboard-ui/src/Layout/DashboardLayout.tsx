@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import {Sidebar} from '../components/Sidebar';
 import {Topbar} from '../components/Topbar';
-import  {useAuth}  from '../auth/useAuth';
+import  {useAuth}  from '../helper/AuthContext/AuthProvider';
 
 export default function DashboardLayout() {
   const { user } = useAuth();

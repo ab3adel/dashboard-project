@@ -3,8 +3,8 @@ import { UserService } from './user.service';
 
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationQueryDto } from './dto/paginationQuery.dto';
-import { Roles } from 'src/authorization/decorators/roles.decorator';
-import { UserRole } from 'src/enums/role.enum';
+import { Roles } from '../authorization/decorators/roles.decorator';
+import { UserRole } from '../enums/role.enum';
 
 @Controller('user')
 export class UserController {

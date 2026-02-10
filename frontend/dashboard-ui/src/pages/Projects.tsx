@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/axios';
-import { useAuth } from '../auth/useAuth';
+import { useAuth } from '../helper/AuthContext/AuthProvider';
 import type { Project } from '../helper/interfaces';
 import { ProjectsTable } from '../components/ProjectTable';
 import { ProjectsCards } from '../components/ProjectsCards';

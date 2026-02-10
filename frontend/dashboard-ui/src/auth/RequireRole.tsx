@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from './useAuth';
+import { useAuth } from '../helper/AuthContext/AuthProvider';
 import type { JSX } from 'react';
 import type { role } from '../helper/interfaces';
 

@@ -4,8 +4,8 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectPaginationQueryDto } from './dto/paginationQuery.dto';
 import { AssignMemebersDto, UpdateUserAssignment } from './dto/assign-memebrs.dto';
-import { Roles } from 'src/authorization/decorators/roles.decorator';
-import { UserRole } from 'src/enums/role.enum';
+import { Roles } from '../authorization/decorators/roles.decorator';
+import { UserRole } from '../enums/role.enum';
 
 @Controller('projects')
 export class ProjectsController {

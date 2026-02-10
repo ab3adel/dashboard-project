@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../auth/useAuth';
+import { useAuth } from '../helper/AuthContext/AuthProvider';
 import { api } from '../api/axios';
 
 export default function Login() {
@@ -21,7 +21,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await api.post('/auth/login', {
+      const res = await api.post('/authentication/sign-in', {
         email,
         password,
       });

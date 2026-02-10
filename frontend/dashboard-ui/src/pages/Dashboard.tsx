@@ -1,4 +1,4 @@
-import { useAuth } from '../auth/useAuth';
+import { useAuth } from '../helper/AuthContext/AuthProvider';
 import { AdminDashboard } from '../components/AdminDashboard';
 import { MemberDashboard } from '../components/MemberDashboard';
 import { StatsGrid } from '../components/StatCard';

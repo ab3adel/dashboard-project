@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { api } from '../api/axios';
-import { useAuth } from '../auth/useAuth';
+import { useAuth } from '../helper/AuthContext/AuthProvider';
 import type { Project } from '../helper/interfaces';
 import { Info } from '../components/Info';
 
