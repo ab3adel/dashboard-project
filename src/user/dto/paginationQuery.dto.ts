@@ -2,7 +2,7 @@ import { Type } from "class-transformer";
 import { IsEnum, IsOptional, IsPositive } from "class-validator";
 
 import { PaginationQueryDto } from "src/common/dto/paginationQuery.dto";
-import { UserRole } from "../enums/role.enum";
+import { UserRole } from "../../enums/role.enum";
 
 
 

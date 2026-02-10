@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsDateString, IsEnum, IsOptional, IsPositive } from "class-validator";
-import { StatusEnum } from "../enums/projects.enums";
+import { StatusEnum } from "../../enums/projects.enums";
 import { PaginationQueryDto } from "src/common/dto/paginationQuery.dto";
 
 

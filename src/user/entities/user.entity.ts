@@ -1,7 +1,7 @@
 
 import { Project } from "src/projects/entities/project.entity";
 import { Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { UserRole } from "../enums/role.enum";
+import { UserRole } from "../../enums/role.enum";
 
 
 export class User {
@@ -12,8 +12,11 @@ export class User {
   @Column() 
   name:string  
   
-  @Column()
+  @Column({ unique: true })
   email:string
+
+  @Column({select:false})
+  password:string
 
   @Column({
     type:'enum',

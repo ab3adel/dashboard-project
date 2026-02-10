@@ -1,5 +1,5 @@
 import { Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
-import { StatusEnum } from "../enums/projects.enums"
+import { StatusEnum } from "../../enums/projects.enums"
 import { User } from "src/user/entities/user.entity"
 
 //(e.g. “active”, “on hold”, “completed”)

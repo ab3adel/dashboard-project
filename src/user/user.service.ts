@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, Query } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, UpdateUserRoleDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -16,7 +16,7 @@ export class UserService {
 ) {}
   
 
-   findAll(@Query() paginationQuery:UserPaginationQueryDto) {
+   findAll(paginationQuery:UserPaginationQueryDto) {
       const{limit,offset,status } = paginationQuery
       return this.userRepository.find({
         where:status?{role:status}:{},
@@ -57,10 +57,43 @@ export class UserService {
 
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    if (!id) {
+      throw new BadRequestException('Provide user Id');
+    }
+     const user = await this.userRepository.preload({
+      id:+id,
+      ...updateUserDto
+     })
+     if (!user) {
+          throw new NotFoundException('The user is not existed');
+     }
+   return await this.userRepository.save(user)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async updateRole (updateUesrRole:UpdateUserRoleDto) {
+   const {id , role} = updateUesrRole
+    if (!id ) {
+      throw new BadRequestException('Provide user Id');
+    }
+    if (!role) {
+      throw new BadRequestException('You should provide role ');
+    }
+     const user = await this.userRepository.preload({
+  
+      id
+      ,role
+     })
+     if (!user) {
+          throw new NotFoundException('The user is not existed');
+     }
+   return await this.userRepository.save(user)
+
+  }
+
+    async remove(id: number) {
+    const user =await  this.findOne(id)
+    return this.userRepository.remove(user)
+
+    
   }
 }

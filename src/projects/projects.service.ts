@@ -1,12 +1,13 @@
-import { Injectable, NotFoundException, Query } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Query } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotFoundError } from 'rxjs';
 import { User } from 'src/user/entities/user.entity';
 import { ProjectPaginationQueryDto } from './dto/paginationQuery.dto';
+import { AssignMemebersDto } from './dto/assign-memebrs.dto';
 
 
 @Injectable()
@@ -31,7 +32,7 @@ export class ProjectsService {
     return this.projectRepository.save(projects);
   }
 
-  findAll(@Query() paginationQuery:ProjectPaginationQueryDto) {
+  findAll( paginationQuery:ProjectPaginationQueryDto) {
     const { status, deadlineFrom, deadlineTo, limit, offset } = paginationQuery;
 
   const query = this.projectRepository
@@ -86,28 +87,66 @@ export class ProjectsService {
      }
   
 
-  async update(id: number, updateProjectDto: UpdateProjectDto) {
-      const users =
-      updateProjectDto.users &&
-      (await Promise.all(
-        updateProjectDto.users.map(id => this.preloadUsersById(id)),
-      ));
-    const project = this.projectRepository.preload({
-      id:+id,
-      ...updateProjectDto,
-      users
-    })
-    if (!project) {
-      throw new NotFoundException(`there is no project with id  ${id}`)
-    }
+ async update(id: number, updateProjectDto: UpdateProjectDto) {
+  const users =
+    updateProjectDto.users &&
+    (await this.UserReposityory.findBy({
+      id: In(updateProjectDto.users),
+    }));
+
+  if (
+    updateProjectDto.users &&
+    users?.length !== updateProjectDto.users.length
+  ) {
+    throw new NotFoundException('One or more users not found');
   }
 
-  async remove(id: number) {
-    const project =await  this.findOne(id)
-    return this.projectRepository.remove(project)
+  const project = await this.projectRepository.preload({
+    id,
+    ...updateProjectDto,
+    users,
+  });
 
-    
+  if (!project) {
+    throw new NotFoundException(`There is no project with id ${id}`);
   }
+
+  return this.projectRepository.save(project);
+}
+
+
+
+  
+async assignMembers(assignMembersDto: AssignMemebersDto) {
+  const { project_id, users_ids } = assignMembersDto;
+
+  if (!users_ids || users_ids.length === 0) {
+    throw new BadRequestException('You should provide at least one user');
+  }
+
+  const project = await this.projectRepository.findOne({
+    where: { id: project_id },
+    relations: { users: true },
+  });
+
+  if (!project) {
+    throw new NotFoundException(`Project with id ${project_id} not found`);
+  }
+
+  const users = await this.UserReposityory.findBy({
+    id: In(users_ids),
+  });
+
+  if (users.length !== users_ids.length) {
+    throw new NotFoundException('One or more users not found');
+  }
+
+  project.users = users;
+
+  return this.projectRepository.save(project);
+}
+
+
 
   
   private async preloadUsersById(id: number): Promise<User> {
@@ -116,5 +155,12 @@ export class ProjectsService {
       return existingUser;
     }
     throw new NotFoundException(`the user you are trying to find is not existed ${id}`)
+  }
+
+    async remove(id: number) {
+    const project =await  this.findOne(id)
+    return this.projectRepository.remove(project)
+
+    
   }
 }
