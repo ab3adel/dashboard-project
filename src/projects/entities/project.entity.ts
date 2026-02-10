@@ -1,8 +1,9 @@
-import { Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
 import { StatusEnum } from "../../enums/projects.enums"
-import { User } from "src/user/entities/user.entity"
+import { User } from "../../user/entities/user.entity"
 
-//(e.g. “active”, “on hold”, “completed”)
+
+@Entity()
 export class Project {
 
     @PrimaryGeneratedColumn()  

@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsInt, IsNumber, IsString } from "class-validator"
+import { IsArray, IsDate, IsInt, IsNumber, IsOptional, IsString } from "class-validator"
 
 
 export class CreateProjectDto {
@@ -11,9 +11,10 @@ export class CreateProjectDto {
     @IsNumber()
     readonly budget : number 
 
+    @IsOptional()
     @IsArray()
     @IsInt({each:true})
-    readonly users: number []
+    readonly users?: number []
      
      
 }

@@ -1,9 +1,9 @@
 
-import { Project } from "src/projects/entities/project.entity";
-import { Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Project } from "../../projects/entities/project.entity";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserRole } from "../../enums/role.enum";
 
-
+@Entity()
 export class User {
 
   @PrimaryGeneratedColumn()

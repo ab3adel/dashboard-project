@@ -8,9 +8,15 @@ import { UserModule } from './user/user.module';
 import { AuthenticaionModule } from './authentication/authentication.module';
 import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ ProjectsModule 
+  imports: [ 
+    ConfigModule.forRoot({
+      isGlobal:true,
+      envFilePath:'.env'
+    })
+           ,ProjectsModule 
            , TypeOrmModule.forRoot({
               type: 'postgres', 
               host: 'localhost', 

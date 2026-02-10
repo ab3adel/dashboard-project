@@ -1,7 +1,7 @@
-import { Type } from "class-transformer";
-import { IsDate, IsDateString, IsEnum, IsOptional, IsPositive } from "class-validator";
+
+import {IsDateString, IsEnum, IsOptional } from "class-validator";
 import { StatusEnum } from "../../enums/projects.enums";
-import { PaginationQueryDto } from "src/common/dto/paginationQuery.dto";
+import { PaginationQueryDto } from "../../common/dto/paginationQuery.dto";
 
 
 

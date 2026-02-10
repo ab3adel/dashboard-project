@@ -1,4 +1,4 @@
-import { IsEmail, IsNumberString, IsOptional, MinLength } from 'class-validator';
+import { IsEmail, MinLength } from 'class-validator';
 
 export class SignInDto {
   @IsEmail()

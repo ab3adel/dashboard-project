@@ -16,7 +16,7 @@ import { ActiveUserData } from './interfaces/active-user-data.interface';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { SignInDto } from './dto/sign-in.dto/sign-in.dto';
 
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -47,12 +47,15 @@ export class AuthenticationService {
   }
 
   async signIn(signInDto: SignInDto) { 
-    const user = await this.usersRepository.findOneBy({
-      email: signInDto.email,
-    });
+    const user = await this.usersRepository
+    .createQueryBuilder('user')
+    .addSelect('user.password') // 👈 explicitly load it
+    .where('user.email = :email', { email: signInDto.email })
+    .getOne();
     if (!user) {
       throw new UnauthorizedException('User does not exists');
     }
+    console.log('user',user)
     const isEqual = await this.hashingService.compare(
       signInDto.password,
       user.password,

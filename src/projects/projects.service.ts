@@ -1,13 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException, Query } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotFoundError } from 'rxjs';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { ProjectPaginationQueryDto } from './dto/paginationQuery.dto';
-import { AssignMemebersDto } from './dto/assign-memebrs.dto';
+import { AssignMemebersDto, UpdateUserAssignment } from './dto/assign-memebrs.dto';
 
 
 @Injectable()
@@ -21,16 +20,21 @@ export class ProjectsService {
   ) {}
 
  async create(createProjectDto: CreateProjectDto) {
-    const users = await Promise.all(
+  let users;
+
+  if (createProjectDto.users?.length) {
+    users = await Promise.all(
       createProjectDto.users.map(id => this.preloadUsersById(id)),
     );
-    
-    const projects = this.projectRepository.create( {
-       ...createProjectDto,
-       users
-     });
-    return this.projectRepository.save(projects);
   }
+
+  const project = this.projectRepository.create({
+    ...createProjectDto,
+    ...(users ? { users } : {}),
+  });
+
+  return this.projectRepository.save(project);
+}
 
   findAll( paginationQuery:ProjectPaginationQueryDto) {
     const { status, deadlineFrom, deadlineTo, limit, offset } = paginationQuery;
@@ -70,20 +74,17 @@ export class ProjectsService {
   }
 
   async search(name?: string, budget?:number) {
-        if (!name && !budget) {
-     return
-    }
-  
-      const projects = await this.projectRepository.find({
-      where: [
-        ...(name ? [{ name }] : []),
-        ...(budget ? [{ budget }] : []),
-      ],
-    });
-  
+        const query = this.projectRepository.createQueryBuilder('project');
 
-  
-    return projects;
+        if (name) {
+          query.andWhere('project.name = :name', { name });
+        }
+
+        if (budget !== undefined) {
+          query.andWhere('project.budget = :budget', { budget });
+        }
+
+        return query.getMany();
      }
   
 
@@ -114,15 +115,17 @@ export class ProjectsService {
   return this.projectRepository.save(project);
 }
 
+ 
+
 
 
   
 async assignMembers(assignMembersDto: AssignMemebersDto) {
   const { project_id, users_ids } = assignMembersDto;
-
-  if (!users_ids || users_ids.length === 0) {
-    throw new BadRequestException('You should provide at least one user');
+  if (!project_id) {
+      throw new BadRequestException('You should provide project ');
   }
+ 
 
   const project = await this.projectRepository.findOne({
     where: { id: project_id },
@@ -132,7 +135,7 @@ async assignMembers(assignMembersDto: AssignMemebersDto) {
   if (!project) {
     throw new NotFoundException(`Project with id ${project_id} not found`);
   }
-
+ if (users_ids.length >0) {
   const users = await this.UserReposityory.findBy({
     id: In(users_ids),
   });
@@ -142,9 +145,36 @@ async assignMembers(assignMembersDto: AssignMemebersDto) {
   }
 
   project.users = users;
-
-  return this.projectRepository.save(project);
 }
+ else {
+  project.users=[]
+ }
+  return this.projectRepository.save(project);
+} 
+
+  async removeUserFromProject( updateUserAssignment:UpdateUserAssignment) {
+    const {id,user_id} = updateUserAssignment
+    const project = await this.findOne(id);
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    const isAssigned = project.users.some(user => user.id === user_id);
+
+    if (!isAssigned) {
+      throw new BadRequestException(
+        'User is not assigned to this project',
+      );
+    }
+
+    project.users = project.users.filter(
+      user => user.id !== user_id,
+    );
+
+    return this.projectRepository.save(project);
+  }
+
 
 
 

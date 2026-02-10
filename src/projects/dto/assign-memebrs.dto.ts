@@ -11,3 +11,13 @@ export class AssignMemebersDto {
     @IsInt({each:true})
     users_ids : number[]
 }
+
+
+export class UpdateUserAssignment {
+    @IsNumber()
+    id : number 
+
+     @IsNumber()
+    user_id : number 
+
+}
