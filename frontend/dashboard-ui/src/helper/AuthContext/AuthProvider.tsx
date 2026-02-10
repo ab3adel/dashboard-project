@@ -22,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (token && storedUser) {
       setUser(JSON.parse(storedUser));
     }
+  
 
     setLoading(false);
   }, []);

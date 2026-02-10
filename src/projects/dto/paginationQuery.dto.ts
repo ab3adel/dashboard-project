@@ -1,5 +1,5 @@
 
-import {IsDateString, IsEnum, IsOptional } from "class-validator";
+import {IsDateString, IsEnum, IsOptional, IsString } from "class-validator";
 import { StatusEnum } from "../../enums/projects.enums";
 import { PaginationQueryDto } from "../../common/dto/paginationQuery.dto";
 
@@ -21,4 +21,10 @@ export class ProjectPaginationQueryDto extends PaginationQueryDto{
   @IsOptional()
   @IsDateString()
   deadlineTo?: string
+
+
+  @IsOptional()
+  @IsString()
+  search?: string;
+
 }

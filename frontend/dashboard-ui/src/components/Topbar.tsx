@@ -1,3 +1,4 @@
+import { useAuth } from "../helper/AuthContext/AuthProvider";
 import type { User } from "../helper/interfaces";
 
 interface iProps {
@@ -7,6 +8,7 @@ interface iProps {
 
 
 export function Topbar({ user, onMenuClick }:iProps) {
+  const {logout} = useAuth()
   return (
     <header className="h-16 bg-white border-b flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-3">
@@ -27,7 +29,7 @@ export function Topbar({ user, onMenuClick }:iProps) {
         <span className="hidden sm:block text-sm text-gray-600">
           {user?.role}
         </span>
-        <button className="text-red-600 text-sm hover:underline">
+        <button onClick={logout} className="text-red-600 text-sm hover:underline">
           Logout
         </button>
       </div>

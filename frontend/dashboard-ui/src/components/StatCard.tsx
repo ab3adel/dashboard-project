@@ -1,22 +1,31 @@
-import type { role } from "../helper/interfaces";
+import type { Project, role } from "../helper/interfaces";
 
-export function StatsGrid({ role }: { role?: role}) {
-  const stats =
+interface iProps {
+  role?:role,
+  stats?:{
+     totalProjects:number
+      activeProjects:number
+      totalUsers:number
+  } ,
+  projects?:Project[]
+}
+export function StatsGrid({ role ,stats,projects}: iProps) {
+  const stats_data =
     role === 'admin'
       ? [
-          { label: 'Total Projects', value: 12 },
-          { label: 'Active Projects', value: 8 },
-          { label: 'Users', value: 24 },
+          { label: 'Total Projects', value:stats?.totalProjects  },
+          { label: 'Active Projects', value: stats?.activeProjects},
+          { label: 'Users', value: stats?.totalUsers},
         ]
       : [
-          { label: 'My Projects', value: 4 },
-          { label: 'Active', value: 3 },
-          { label: 'Completed', value: 1 },
+          { label: 'My Projects', value: projects?.length},
+          { label: 'Active', value: projects?.filter(ele=>ele.status === 'active').length },
+          { label: 'Completed', value: projects?.filter(ele=>ele.status === 'completed').length },
         ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {stats.map(stat => (
+      {stats_data.map((stat) => (
         <div
           key={stat.label}
           className="bg-white rounded-lg shadow p-4"

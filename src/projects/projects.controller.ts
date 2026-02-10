@@ -6,6 +6,8 @@ import { ProjectPaginationQueryDto } from './dto/paginationQuery.dto';
 import { AssignMemebersDto, UpdateUserAssignment } from './dto/assign-memebrs.dto';
 import { Roles } from '../authorization/decorators/roles.decorator';
 import { UserRole } from '../enums/role.enum';
+import { ActiveUser } from 'src/authentication/deconrators/active-user.decorator';
+import type { ActiveUserData } from 'src/authentication/interfaces/active-user-data.interface';
 
 @Controller('projects')
 export class ProjectsController {
@@ -22,7 +24,12 @@ export class ProjectsController {
   findAll(@Query() paginationQuery:ProjectPaginationQueryDto) {
     return this.projectsService.findAll(paginationQuery);
   }
-
+   
+  @Roles(UserRole.Admin)
+  @Get('stats')
+  getStats(@ActiveUser() user:ActiveUserData) {
+    return this.projectsService.getStats(user);
+  }
   
 @Roles(UserRole.Admin)
 @Get('search')

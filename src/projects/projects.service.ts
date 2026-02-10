@@ -7,6 +7,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { ProjectPaginationQueryDto } from './dto/paginationQuery.dto';
 import { AssignMemebersDto, UpdateUserAssignment } from './dto/assign-memebrs.dto';
+import { StatusEnum } from 'src/enums/projects.enums';
+import { ActiveUserData } from 'src/authentication/interfaces/active-user-data.interface';
+import { UserRole } from 'src/enums/role.enum';
 
 
 @Injectable()
@@ -36,8 +39,15 @@ export class ProjectsService {
   return this.projectRepository.save(project);
 }
 
-  findAll( paginationQuery:ProjectPaginationQueryDto) {
-    const { status, deadlineFrom, deadlineTo, limit, offset } = paginationQuery;
+ findAll(paginationQuery: ProjectPaginationQueryDto) {
+  const {
+    status,
+    deadlineFrom,
+    deadlineTo,
+    search,
+    limit,
+    offset,
+  } = paginationQuery;
 
   const query = this.projectRepository
     .createQueryBuilder('project')
@@ -47,6 +57,13 @@ export class ProjectsService {
 
   if (status) {
     query.andWhere('project.status = :status', { status });
+  }
+
+  if (search) {
+    query.andWhere(
+      'LOWER(project.name) LIKE LOWER(:search)',
+      { search: `%${search}%` },
+    );
   }
 
   if (deadlineFrom) {
@@ -62,6 +79,31 @@ export class ProjectsService {
   }
 
   return query.getMany();
+}
+
+  async getStats(user : ActiveUserData) {
+    if (user.role === UserRole.Admin){
+    const [totalProjects, activeProjects, totalUsers] =
+      await Promise.all([
+        this.projectRepository.count(),
+        this.projectRepository.count({
+          where: { status: StatusEnum.Active },
+        }),
+        this.UserReposityory.count(),
+      ]);
+
+    return {
+      totalProjects,
+      activeProjects,
+      totalUsers,
+    };
+  } 
+   return this.projectRepository
+    .createQueryBuilder('project')
+    .leftJoin('project.users', 'user')
+    .where('user.id = :userId', { userId: user.sub })
+    .getMany();
+
   }
 
   async findOne(id: number) {

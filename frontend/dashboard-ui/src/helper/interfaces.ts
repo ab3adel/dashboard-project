@@ -18,3 +18,11 @@ export interface Project {
     users:User[],
     status:status
 }
+
+export type AlertType = 'success' | 'error' | 'info' | 'warning';
+
+export type Alert = {
+  id: string;
+  type: AlertType;
+  message: string;
+};

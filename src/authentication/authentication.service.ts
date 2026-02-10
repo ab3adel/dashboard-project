@@ -49,13 +49,13 @@ export class AuthenticationService {
   async signIn(signInDto: SignInDto) { 
     const user = await this.usersRepository
     .createQueryBuilder('user')
-    .addSelect('user.password') // 👈 explicitly load it
+    .addSelect('user.password') 
     .where('user.email = :email', { email: signInDto.email })
     .getOne();
     if (!user) {
       throw new UnauthorizedException('User does not exists');
     }
-    console.log('user',user)
+  
     const isEqual = await this.hashingService.compare(
       signInDto.password,
       user.password,
@@ -83,11 +83,13 @@ export class AuthenticationService {
         refreshTokenId,
       }),
     ]);
+    let user_res = {email:user.email,name:user.name,id:user.id,role:user.role}
 
-    return {
+    return ({
       accessToken,
       refreshToken,
-    };
+      user:user_res
+    });
   }
 
   async refreshTokens(refreshTokenDto: RefreshTokenDto) {

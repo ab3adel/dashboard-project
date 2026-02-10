@@ -8,7 +8,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar role={user?.role} open={true} onClose={()=>{}}/>
+      {/* <Sidebar role={user?.role} open={true} onClose={()=>{}}/> */}
 
       <div className="flex flex-col flex-1">
         <Topbar user={user} onMenuClick={()=>{}} />
