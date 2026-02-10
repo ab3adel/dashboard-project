@@ -1,5 +1,6 @@
 import { useAuth } from '../auth/useAuth';
 import { AdminDashboard } from '../components/AdminDashboard';
+import { MemberDashboard } from '../components/MemberDashboard';
 import { StatsGrid } from '../components/StatCard';
 
 export default function Dashboard() {

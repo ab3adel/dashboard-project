@@ -8,7 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import ProjectDetails from './pages/ProjectDetails';
 import Users from './pages/Users';
-import NotAuthorized from './pages/NotAuthorized';
+
 
 export default function App() {
   return (
@@ -32,7 +32,7 @@ export default function App() {
         <Route
           path="/users"
           element={
-            <RequireRole role="ADMIN">
+            <RequireRole role="admin">
               <Users />
             </RequireRole>
           }
@@ -40,7 +40,7 @@ export default function App() {
       </Route>
 
       {/* Fallback */}
-      <Route path="/not-authorized" element={<NotAuthorized />} />
+      {/* <Route path="/not-authorized" element={<NotAuthorized />} /> */}
       <Route path="*" element={<Login />} />
     </Routes>
   );

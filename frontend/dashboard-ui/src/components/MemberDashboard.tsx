@@ -1,3 +1,4 @@
+import { ProjectCard } from "./ProjectCard";
 
 export function MemberDashboard() {
   return (

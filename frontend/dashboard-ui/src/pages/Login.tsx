@@ -44,6 +44,7 @@ export default function Login() {
           Dashboard Login
         </h1>
 
+
         {error && (
           <div className="mb-4 text-sm text-red-600 bg-red-50 p-2 rounded">
             {error}
