@@ -6,7 +6,8 @@ import { Project } from './entities/project.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotFoundError } from 'rxjs';
 import { User } from 'src/user/entities/user.entity';
-import { PaginationQueryDto } from './dto/paginationQuery.dto';
+import { ProjectPaginationQueryDto } from './dto/paginationQuery.dto';
+
 
 @Injectable()
 export class ProjectsService {
@@ -30,16 +31,32 @@ export class ProjectsService {
     return this.projectRepository.save(projects);
   }
 
-  findAll(@Query() paginationQuery:PaginationQueryDto) {
-    const{limit,offset,status } = paginationQuery
-    return this.projectRepository.find({
-      where:status?{status}:{},
-      relations:{
-        users:true
-      },
-      skip:offset,
-      take:limit
-    })
+  findAll(@Query() paginationQuery:ProjectPaginationQueryDto) {
+    const { status, deadlineFrom, deadlineTo, limit, offset } = paginationQuery;
+
+  const query = this.projectRepository
+    .createQueryBuilder('project')
+    .leftJoinAndSelect('project.users', 'user')
+    .skip(offset)
+    .take(limit);
+
+  if (status) {
+    query.andWhere('project.status = :status', { status });
+  }
+
+  if (deadlineFrom) {
+    query.andWhere('project.deadline >= :from', {
+      from: new Date(deadlineFrom),
+    });
+  }
+
+  if (deadlineTo) {
+    query.andWhere('project.deadline <= :to', {
+      to: new Date(deadlineTo),
+    });
+  }
+
+  return query.getMany();
   }
 
   async findOne(id: number) {
@@ -50,6 +67,24 @@ export class ProjectsService {
    }
    return project
   }
+
+  async search(name?: string, budget?:number) {
+        if (!name && !budget) {
+     return
+    }
+  
+      const projects = await this.projectRepository.find({
+      where: [
+        ...(name ? [{ name }] : []),
+        ...(budget ? [{ budget }] : []),
+      ],
+    });
+  
+
+  
+    return projects;
+     }
+  
 
   async update(id: number, updateProjectDto: UpdateProjectDto) {
       const users =

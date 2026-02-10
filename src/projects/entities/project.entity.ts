@@ -1,5 +1,5 @@
 import { Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
-import type { StatusEnum } from "../enums/projects.enums"
+import { StatusEnum } from "../enums/projects.enums"
 import { User } from "src/user/entities/user.entity"
 
 //(e.g. “active”, “on hold”, “completed”)
@@ -11,8 +11,12 @@ export class Project {
     @Column()
     name :string
 
-    @Column()
-    status :StatusEnum
+    @Column({
+        type:'enum',
+        enum:StatusEnum,
+        default:StatusEnum.Active
+    })
+       status :StatusEnum
 
     @Column()
     deadline: Date 
