@@ -1,6 +1,6 @@
-import { formatDate } from "../helper/date_formater";
-import type { Project } from "../helper/interfaces";
-import { ProjectCard } from "./ProjectCard";
+import { formatDate } from "../../helper/date_formater";
+import type { Project } from "../../helper/interfaces";
+import { ProjectCard } from "../Projects/ProjectCard";
 
 interface iProps {projects?:Project[]}
 export function MemberDashboard({projects}:iProps) {

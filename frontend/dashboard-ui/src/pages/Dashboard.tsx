@@ -1,6 +1,6 @@
 import { useAuth } from '../helper/AuthContext/AuthProvider';
 import { AdminDashboard } from '../components/AdminDashboard';
-import { MemberDashboard } from '../components/MemberDashboard';
+import { MemberDashboard } from '../components/Dashboard/MemberDashboard';
 import { StatsGrid } from '../components/StatCard';
 import { api } from '../api/axios';
 import { useEffect, useState } from 'react';

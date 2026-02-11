@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { api } from '../api/axios';
 import { useAuth } from '../helper/AuthContext/AuthProvider';
 import type { Project } from '../helper/interfaces';
-import { Info } from '../components/Info';
+import { Info } from '../components/MiniComponents/Info';
 
 export default function ProjectDetails() {
   const { id } = useParams();

@@ -1,5 +1,5 @@
-import type { User } from "../helper/interfaces";
-import { RoleBadge } from "./RoleBadge";
+import type { User } from "../../helper/interfaces";
+import { RoleBadge } from "../MiniComponents/RoleBadge";
 import { UserActions } from "./UserAction";
 
 

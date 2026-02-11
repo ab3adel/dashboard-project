@@ -1,12 +1,15 @@
 import { Link } from "react-router";
-import type { Project } from "../helper/interfaces";
-import { StatusBadge } from "./StatusBadge";
+import type { Project } from "../../helper/interfaces";
+import { StatusBadge } from "../MiniComponents/StatusBadge";
 
 
+export function ProjectsTable({projects}:{projects:Project[]}) {
 
-export function ProjectsTable({ projects }: { projects: Project[] }) {
+
+  
   return (
     <div className="hidden md:block bg-white rounded-lg shadow overflow-x-auto">
+      
       <table className="min-w-full text-sm">
         <thead className="bg-gray-100">
           <tr>

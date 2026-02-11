@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Project } from "../helper/interfaces";
-import { api } from "../api/axios";
-import { useAlert } from "../helper/AlertContext/AlertContext";
-import type { AxiosError } from "axios";
+import type { Project } from "../../helper/interfaces";
+import { api } from "../../api/axios";
+import { useAlert } from "../../helper/AlertContext/AlertContext";
+
 
 export function AdminDashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -24,8 +24,8 @@ export function AdminDashboard() {
 
       if (search) params.search = search;
       if (status !== "ALL") params.status = status;
-      if (fromDate) params.from = fromDate;
-      if (toDate) params.to = toDate;
+      if (fromDate) params.deadlineFrom = fromDate;
+      if (toDate) params.deadlineTo = toDate;
 
       try {
         const res = await api.get("/projects", {
@@ -69,8 +69,9 @@ export function AdminDashboard() {
             className="border rounded px-3 py-2 text-sm"
           >
             <option value="ALL">All statuses</option>
-            <option value="ACTIVE">Active</option>
-            <option value="COMPLETED">Completed</option>
+            <option value="active">Active</option>
+            <option value="on hold">Pending</option>
+            <option value="completed">Completed</option>
           </select>
 
          <div className="flex flex-col gap-1">

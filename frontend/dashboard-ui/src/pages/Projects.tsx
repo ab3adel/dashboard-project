@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import { api } from '../api/axios';
 import { useAuth } from '../helper/AuthContext/AuthProvider';
 import type { Project } from '../helper/interfaces';
-import { ProjectsTable } from '../components/ProjectTable';
-import { ProjectsCards } from '../components/ProjectsCards';
+import { ProjectsTable } from '../components/Projects/ProjectTable';
+import { ProjectsCards } from '../components/Projects/ProjectsCards';
+import { useAlert } from '../helper/AlertContext/AlertContext';
 
 
 export default function Projects() {
@@ -14,12 +15,47 @@ export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api.get('/projects').then(res => {
-      setProjects(res.data);
-      setLoading(false);
-    });
-  }, []);
+    const [search, setSearch] = useState("");
+    const [status, setStatus] = useState("ALL");
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+    const {showAlert} =useAlert()
+
+    useEffect(() => {
+      const controller = new AbortController();
+  
+      async function fetchProjects() {
+        setLoading(true);
+  
+        const params: any = {};
+  
+        if (search) params.search = search;
+        if (status !== "ALL") params.status = status;
+        if (fromDate) params.deadlineFrom = fromDate;
+        if (toDate) params.deadlineTo = toDate;
+  
+        try {
+          const res = await api.get("/projects", {
+            params,
+            signal: controller.signal,
+          });
+          setProjects(res.data);
+        } catch (err:any) {
+          showAlert('error','Something bad happened')
+          if (err.name !== "CanceledError") {
+            console.log(err)
+          }
+        } finally {
+          setLoading(false);
+        }
+      }
+  
+      fetchProjects();
+  
+      return () => controller.abort();
+    }, [search, status, fromDate, toDate]);
+
+
 
   if (loading) return <div>Loading projects…</div>;
 
@@ -35,6 +71,47 @@ export default function Projects() {
           </button>
         )}
       </div>
+
+       <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                <input
+                  type="text"
+                  placeholder="Search by name"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  className="border rounded px-3 py-2 text-sm"
+                />
+      
+                <select
+                  value={status}
+                  onChange={e => setStatus(e.target.value)}
+                  className="border rounded px-3 py-2 text-sm"
+                >
+                  <option value="ALL">All statuses</option>
+                  <option value="active">Active</option>
+                  <option value="on hold">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
+      
+               <div className="flex flex-col gap-1 bg-gray-50">
+                  <label className="text-xs text-gray-500">From</label>
+                  <input
+                    type="date"
+                    value={fromDate}
+                    onChange={e => setFromDate(e.target.value)}
+                    className="border rounded px-3 py-2 text-sm"
+                  />
+                </div>
+      
+                <div className="flex flex-col gap-1 bg-gray-50">
+                  <label className="text-xs text-gray-500">To</label>
+                  <input
+                    type="date"
+                    value={toDate}
+                    onChange={e => setToDate(e.target.value)}
+                    className="border rounded px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
 
       {/* Desktop table */}
       <ProjectsTable projects={projects} />
