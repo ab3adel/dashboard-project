@@ -37,6 +37,7 @@ export function ProjectsTable({projects,deleteProjct}:{projects:Project[],delete
                 ${project.budget}
               </td>
               <td className="px-4 py-3 text-right">
+                
                 <Link
                   to={`/projects/${project.id}`}
                   className="text-blue-600 hover:underline"
@@ -58,14 +59,15 @@ export function ProjectsTable({projects,deleteProjct}:{projects:Project[],delete
                   Assign Members
                 </Link>
                  
-              </td>
-              <td>
+              
+              
                 <button
                   onClick={()=>deleteProjct(true,project.id)}
-                  className="text-red-600 text-sm cursor-pointer"
+                  className="text-red-600 text-sm cursor-pointer mx-2"
                 >
                   Delete
                 </button>
+              
               </td>
             </tr>
           ))}

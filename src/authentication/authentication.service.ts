@@ -94,6 +94,7 @@ export class AuthenticationService {
 
   async refreshTokens(refreshTokenDto: RefreshTokenDto) {
     try {
+      console.log('refreshToken',refreshTokenDto)
       const { sub } = await this.jwtService.verifyAsync<
         Pick<ActiveUserData, 'sub'> 
       >(refreshTokenDto.refreshToken, {

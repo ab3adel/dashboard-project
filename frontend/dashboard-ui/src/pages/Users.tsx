@@ -11,10 +11,13 @@ export default function Users() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/users').then(res => {
+    api.get('/user').then(res => {
       setUsers(res.data);
       setLoading(false);
-    });
+    })
+    .catch(err=>{
+      
+    })
   }, []);
 
   if (loading) {

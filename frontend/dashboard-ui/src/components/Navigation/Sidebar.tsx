@@ -39,10 +39,11 @@ export function Sidebar({ role, open, onClose }:iProps) {
 
         <nav className="px-4 space-y-2">
           <NavItem label="Dashboard" to= "/" onClick={()=>navigate('/')} />
-          <NavItem label="Projects" to= "/projects" onClick={()=>navigate('/projects')} />
+          
 
           {role === 'admin' && (
             <>
+            <NavItem label="Projects" to= "/projects" onClick={()=>navigate('/projects')} />
               <NavItem label="Users" to= "/users" onClick={()=>navigate('/users')} />
               <NavItem label="Assignments" to= "/assignments" onClick={()=>navigate('/assignments')} />
             </>

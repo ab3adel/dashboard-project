@@ -6,9 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/axios';
 import { useAuth } from '../helper/AuthContext/AuthProvider';
 import type { Project } from '../helper/interfaces';
-import { Info } from '../components/MiniComponents/Info';
+import { Info, UsersInfo } from '../components/MiniComponents/Info';
 import { useAlert } from '../helper/AlertContext/AlertContext';
 import { BackButton } from '../components/MiniComponents/BackButton';
+import { ConfirmDialog } from '../components/MiniComponents/ConfirmDialog';
 
 export default function ProjectDetails() {
   const { id } = useParams();
@@ -16,11 +17,16 @@ export default function ProjectDetails() {
   const {showAlert}=useAlert()
   const [project, setProject] = useState<Project|null>(null);
   const navigate = useNavigate()
+  const [openConfirm, setOpenConfirm] = useState({open:false,id:-1});
+  const [loading, setLoading] = useState(false);  
 
-  const deleteProject=()=>{
-    api.delete(`/projects/${id}`)
+  const handleDelete=()=>{
+    setLoading(true)
+    api.delete(`/projects/${openConfirm.id}`)
     .then(res=>{
       showAlert('info','Project was deletetd Successfully')
+      setOpenConfirm(pre=>({...pre,open:false}))
+      navigate('/projects')
     })
     .catch(err=>{
       if (err.message && Array.isArray(err.message)){
@@ -31,12 +37,25 @@ export default function ProjectDetails() {
       }
 
     })
+    .finally(()=>{
+      setLoading(false)
+     
+    })
+    
   }
 
   useEffect(() => {
     api.get(`/projects/${id}`).then(res => {
       setProject(res.data);
-    });
+    }) .catch(err=>{
+      if (err.message && Array.isArray(err.message)){
+        err.message.map((ele:any)=>showAlert('error',ele))
+      }
+      else{
+        showAlert('error',err.message||'something bad happpened')
+      }
+
+    })
   }, [id]);
 
   if (!project) return <div>Loading project…</div>;
@@ -49,7 +68,7 @@ export default function ProjectDetails() {
         <h2 className="text-2xl font-semibold">
           {project.name}
         </h2>
-        <div className="flex">
+        <div className="grid grid-cols-3 gap-1">
 
             {user?.role === 'admin' && (
               <button className="bg-blue-600 text-white px-4 py-2 rounded mx-2 cursor-pointer"
@@ -65,6 +84,16 @@ export default function ProjectDetails() {
                 Update Project
               </button>
             )}
+            {
+              user?.role ==='admin' && (
+                        <button
+                  onClick={()=>setOpenConfirm(pre=>({id:project.id,open:true}))}
+                  className="bg-red-600 text-white text-sm cursor-pointer rounded "
+                >
+                  Delete
+                </button>
+              )
+            }
         </div>
         
       </div>
@@ -74,6 +103,7 @@ export default function ProjectDetails() {
         <Info label="Status" value={project.status} />
         <Info label="Deadline" value={project.deadline} />
         <Info label="Budget" value={`$${project.budget}`} />
+        <UsersInfo  info={project.users} />
       </div>
 
       {/* Users */}
@@ -105,6 +135,16 @@ export default function ProjectDetails() {
           </ul>
         )}
       </div>
+
+      <ConfirmDialog
+              open={openConfirm.open}
+              title="Delete Project"
+              message="Are you sure you want to delete this project? This action cannot be undone."
+              confirmText="Delete"
+              loading={loading}
+              onConfirm={handleDelete}
+              onCancel={() => setOpenConfirm(pre=>({...pre,open:false}))}
+            />
     </div>
   );
 }

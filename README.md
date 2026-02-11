@@ -1,13 +1,17 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> # Dashboard Project Management System
+
+A full-stack project management dashboard built with:
+
+- NestJS (Backend API)
+- PostgreSQL + TypeORM
+- JWT Authentication (Access + Refresh tokens)
+- React + TailwindCSS (Frontend)
+- Role-based authorization (Admin / Member)
 </p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
 <a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
@@ -21,78 +25,136 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- User authentication with JWT
+- Role-based access control (Admin / Member)
+- CRUD operations for Projects
+- CRUD operations for Users
+- Assign members to projects
+- Protected routes
+- Access token auto-refresh
+- Responsive dashboard UI
+- Confirmation dialogs for destructive actions
 
-```bash
-$ npm install
-```
+## Architecture
 
-## Compile and run the project
+### Backend
+- NestJS
+- TypeORM
+- PostgreSQL
+- JWT-based authentication
+- Refresh token stored in httpOnly cookie
 
-```bash
-# development
-$ npm run start
+### Frontend
+- React (Vite)
+- TailwindCSS
+- Axios with interceptors
+- Automatic token refresh
 
-# watch mode
-$ npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
+## Authentication Flow
 
-## Run tests
+1. User logs in.
+2. Server returns:
+   - Access Token (short-lived)
+   - Refresh Token (httpOnly cookie)
+3. Access token is attached to all API requests.
+4. If access token expires:
+   - Frontend automatically calls `/auth/refresh`
+   - A new access token is issued.
+5. If refresh token is expired:
+   - User is redirected to login.
 
-```bash
-# unit tests
-$ npm run test
 
-# e2e tests
-$ npm run test:e2e
+## Roles
 
-# test coverage
-$ npm run test:cov
-```
+- Admin:
+  - Create / Update / Delete Projects
+  - Assign users to projects
+  - Manage users
 
-## Deployment
+- Member:
+  - View assigned projects only
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Backend Setup
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+1. Install dependencies:
+   npm install
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+2. Create `.env` file:
 
-## Resources
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   DATABASE_USER=postgres
+   DATABASE_PASSWORD=yourpassword
+   DATABASE_NAME=dashboard
 
-Check out a few resources that may come in handy when working with NestJS:
+   JWT_SECRET=your_secret
+4. Seed Database : 
+   npm run seed
+3. Run server:
+   npm run start:dev
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Frontend Setup
 
-## Support
+1. Navigate to frontend folder:
+   cd frontend/dashboard-ui
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+2. Install dependencies:
+   npm install
 
-## Stay in touch
+3. Run:
+   npm run dev
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Environment Variables
 
-## License
+| Variable | Description |
+|----------|-------------|
+| DATABASE_HOST | Database host |
+| DATABASE_PORT | Database port |
+| JWT_SECRET | JWT signing secret |
+| ACCESS_TOKEN_TTL | Access token expiration |
+| REFRESH_TOKEN_TTL | Refresh token expiration |
+``
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## API Endpoints
+
+### Auth
+POST /authentication/login
+POST /authentication/refresh
+
+### Projects
+GET /projects
+POST /projects
+PATCH /projects/:id
+DELETE /projects/:id
+
+### Users
+GET /user
+POST /user
+
+
+## Security
+
+- Access tokens are short-lived.
+- Refresh tokens are stored in httpOnly cookies.
+- Role-based guards protect sensitive routes.
+- Confirmation dialog for destructive actions.
+
+
+## Folder Structure
+
+backend/
+  src/
+    authentication/
+    users/
+    projects/
+
+frontend/
+  src/
+    components/
+    pages/
+    api/
