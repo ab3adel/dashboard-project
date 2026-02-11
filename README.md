@@ -93,9 +93,11 @@ A full-stack project management dashboard built with:
    DATABASE_NAME=dashboard
 
    JWT_SECRET=your_secret
-4. Seed Database : 
+4. run Database : 
+   Docker-compose up db    
+5. Seed Database : 
    npm run seed
-3. Run server:
+6. Run server:
    npm run start:dev
 
 ## Frontend Setup
