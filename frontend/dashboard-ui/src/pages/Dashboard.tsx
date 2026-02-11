@@ -1,7 +1,7 @@
 import { useAuth } from '../helper/AuthContext/AuthProvider';
-import { AdminDashboard } from '../components/AdminDashboard';
+import { AdminDashboard } from '../components/Dashboard/AdminDashboard';
 import { MemberDashboard } from '../components/Dashboard/MemberDashboard';
-import { StatsGrid } from '../components/StatCard';
+import { StatsGrid } from '../components/MiniComponents/StatCard';
 import { api } from '../api/axios';
 import { useEffect, useState } from 'react';
 import { useAlert } from '../helper/AlertContext/AlertContext';

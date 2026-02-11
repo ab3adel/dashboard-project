@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import type { Project } from "../../helper/interfaces";
 import { api } from "../../api/axios";
 import { useAlert } from "../../helper/AlertContext/AlertContext";
+import { StatusBadge } from "../MiniComponents/StatusBadge";
+import { Link } from "react-router";
 
 
 export function AdminDashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
-
+ const [debouncedSearch, setDebouncedSearch] = useState("");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ALL");
   const [fromDate, setFromDate] = useState("");
@@ -22,7 +24,7 @@ export function AdminDashboard() {
 
       const params: any = {};
 
-      if (search) params.search = search;
+      if (search) params.search = debouncedSearch;
       if (status !== "ALL") params.status = status;
       if (fromDate) params.deadlineFrom = fromDate;
       if (toDate) params.deadlineTo = toDate;
@@ -46,7 +48,17 @@ export function AdminDashboard() {
     fetchProjects();
 
     return () => controller.abort();
-  }, [search, status, fromDate, toDate]);
+  }, [debouncedSearch, status, fromDate, toDate]);
+  
+
+  
+    useEffect(() => {
+  const timer = setTimeout(() => {
+    setDebouncedSearch(search);
+  }, 400)
+
+  return () => clearTimeout(timer);
+}, [search]);
 
   return (
     <div className="space-y-6">
@@ -108,9 +120,10 @@ export function AdminDashboard() {
                 className="py-2 flex justify-between items-center"
               >
                 <span className="font-medium">{p.name}</span>
-                <span className="text-xs px-2 py-1 rounded bg-gray-100">
-                  {p.status}
-                </span>
+                 
+                <StatusBadge status={p.status} />
+              
+                
               </li>
             ))}
           </ul>

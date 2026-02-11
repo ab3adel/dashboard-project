@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/axios';
 import type { role, User } from '../helper/interfaces';
-import { UsersTable } from '../components/PcTable';
+import { UsersTable } from '../components/Users/PcTable';
 import { UsersCards } from '../components/Users/UserCard';
 
 

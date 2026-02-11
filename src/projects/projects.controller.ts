@@ -42,7 +42,7 @@ search(
 
 
 @Roles(UserRole.Admin)
-@Post('assign-member')
+@Patch('assign-member')
 assignMemeber(@Body() assignMembersDto: AssignMemebersDto ) {
 
   return this.projectsService.assignMembers(assignMembersDto)

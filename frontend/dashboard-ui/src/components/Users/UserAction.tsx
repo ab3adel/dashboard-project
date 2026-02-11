@@ -1,4 +1,4 @@
-import type { User } from "../helper/interfaces";
+import type { User } from "../../helper/interfaces";
 
 
 

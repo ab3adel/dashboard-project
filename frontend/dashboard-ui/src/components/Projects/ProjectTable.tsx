@@ -3,7 +3,7 @@ import type { Project } from "../../helper/interfaces";
 import { StatusBadge } from "../MiniComponents/StatusBadge";
 
 
-export function ProjectsTable({projects}:{projects:Project[]}) {
+export function ProjectsTable({projects,deleteProjct}:{projects:Project[],deleteProjct:(open:boolean,id:number)=>void}) {
 
 
   
@@ -43,6 +43,29 @@ export function ProjectsTable({projects}:{projects:Project[]}) {
                 >
                   View
                 </Link>
+                <span>&nbsp;</span>
+                <Link
+                  to={`/projects/update-project/${project.id}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  Edit
+                </Link>
+                 <span>&nbsp;</span>
+                <Link
+                  to={`/projects/${project.id}/members`}
+                  className="text-blue-600 hover:underline"
+                >
+                  Assign Members
+                </Link>
+                 
+              </td>
+              <td>
+                <button
+                  onClick={()=>deleteProjct(true,project.id)}
+                  className="text-red-600 text-sm cursor-pointer"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}

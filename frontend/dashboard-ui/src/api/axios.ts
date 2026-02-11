@@ -75,7 +75,10 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await api.post('/authentication/refresh');
+        let refreshToken = localStorage.getItem('refreshToken')
+        const res = await api.post('/authentication/refresh',{
+          refreshToken
+        });
 
         const newAccessToken = res.data.accessToken;
 

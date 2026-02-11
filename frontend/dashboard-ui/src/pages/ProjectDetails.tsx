@@ -2,16 +2,36 @@
 
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/axios';
 import { useAuth } from '../helper/AuthContext/AuthProvider';
 import type { Project } from '../helper/interfaces';
 import { Info } from '../components/MiniComponents/Info';
+import { useAlert } from '../helper/AlertContext/AlertContext';
+import { BackButton } from '../components/MiniComponents/BackButton';
 
 export default function ProjectDetails() {
   const { id } = useParams();
   const { user } = useAuth();
+  const {showAlert}=useAlert()
   const [project, setProject] = useState<Project|null>(null);
+  const navigate = useNavigate()
+
+  const deleteProject=()=>{
+    api.delete(`/projects/${id}`)
+    .then(res=>{
+      showAlert('info','Project was deletetd Successfully')
+    })
+    .catch(err=>{
+      if (err.message && Array.isArray(err.message)){
+        err.message.map((ele:any)=>showAlert('error',ele))
+      }
+      else{
+        showAlert('error',err.message||'something bad happpened')
+      }
+
+    })
+  }
 
   useEffect(() => {
     api.get(`/projects/${id}`).then(res => {
@@ -23,17 +43,30 @@ export default function ProjectDetails() {
 
   return (
     <div className="space-y-6">
+       <BackButton />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <h2 className="text-2xl font-semibold">
           {project.name}
         </h2>
+        <div className="flex">
 
-        {user?.role === 'admin' && (
-          <button className="bg-blue-600 text-white px-4 py-2 rounded">
-            Assign Users
-          </button>
-        )}
+            {user?.role === 'admin' && (
+              <button className="bg-blue-600 text-white px-4 py-2 rounded mx-2 cursor-pointer"
+              onClick={()=>navigate(`/projects/${project.id}/members`)}
+              >
+                Assign Users
+              </button>
+            )}
+            {user?.role === 'admin' && (
+              <button className="bg-blue-600 text-white px-4 py-2 rounded mx-2 cursor-pointer"
+              onClick={()=>navigate(`/projects/update-project/${project.id}`)}
+              >
+                Update Project
+              </button>
+            )}
+        </div>
+        
       </div>
 
       {/* Project info */}

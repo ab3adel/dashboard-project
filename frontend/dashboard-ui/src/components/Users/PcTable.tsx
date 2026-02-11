@@ -1,6 +1,6 @@
-import type { User } from "../helper/interfaces";
-import { RoleBadge } from "./RoleBadge";
-import { UserActions } from "./UserAction";
+import type { User } from "../../helper/interfaces";
+import { RoleBadge } from "../MiniComponents/RoleBadge";
+import { UserActions } from "../Users/UserAction";
 
 export function UsersTable({ users }: { users: User[] }) {
   return (

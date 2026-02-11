@@ -8,7 +8,9 @@ import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import ProjectDetails from './pages/ProjectDetails';
 import Users from './pages/Users';
-
+import CreateProject from './pages/CreateProject';
+import UpdateProject from './pages/UpdateProject'
+import AssignMembers from './pages/AssignMembers';
 
 export default function App() {
   return (
@@ -26,7 +28,11 @@ export default function App() {
       >
         <Route path="/" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/create-project" element={<CreateProject />} />
         <Route path="/projects/:id" element={<ProjectDetails />} />
+        <Route path="/projects/update-project/:id" element={<UpdateProject />} />
+        <Route path="/projects/:id/members" element={<AssignMembers />} />
+        
 
         {/* Admin only */}
         <Route

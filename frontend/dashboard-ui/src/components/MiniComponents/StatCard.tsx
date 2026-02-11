@@ -1,4 +1,4 @@
-import type { Project, role } from "../helper/interfaces";
+import type { Project, role } from "../../helper/interfaces";
 
 interface iProps {
   role?:role,

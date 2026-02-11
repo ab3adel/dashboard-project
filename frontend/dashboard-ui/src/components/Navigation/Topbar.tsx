@@ -1,5 +1,5 @@
-import { useAuth } from "../helper/AuthContext/AuthProvider";
-import type { User } from "../helper/interfaces";
+import { useAuth } from "../../helper/AuthContext/AuthProvider";
+import type { User } from "../../helper/interfaces";
 
 interface iProps {
     user:User | null,

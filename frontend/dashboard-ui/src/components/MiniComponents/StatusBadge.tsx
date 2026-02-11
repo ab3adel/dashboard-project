@@ -1,4 +1,4 @@
-import type { status } from "../helper/interfaces";
+import type { status } from "../../helper/interfaces";
 
 
 
